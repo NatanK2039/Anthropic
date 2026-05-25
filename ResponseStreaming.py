@@ -16,7 +16,7 @@ def add_assistant_message(messages, text):
 
 messages = []
 
-add_user_message(messages, "hello!")
+add_user_message(messages, "What is the date today?")
 
 
 
@@ -29,4 +29,4 @@ with client.messages.stream(
         print(text, end="")
         pass
 
-stream.get_final_message()
+#stream.get_final_message() GETS THE FINAL MESSAGE AFTER COMBINING CHUNKS
