@@ -1,24 +1,19 @@
-from dotenv import load_dotenv
+﻿from dotenv import load_dotenv
 from anthropic import Anthropic
-from DateTimeTool import get_current_datetime_schema, get_current_datetime
-import DateTimeTool
 from anthropic.types import ToolUseBlock, TextBlock
-
+from Logger import logThis
+import ToolRegistry
 load_dotenv()
 
 client = Anthropic()
-haiku = "claude-haiku-4-5-20251001"
 sonnet = "claude-sonnet-4-6"
 
 def add_user_message(messages, text):
     messages.append({"role": "user", "content": text})
 
-def add_assistant_message(messages, text):
-    messages.append({"role": "assistant", "content": text})
-
-def chat(messages, system_prompt=None, temperature=None, toolSchemas=None):
+def chat(messages, system_prompt="You have access to a tool called list_tools and get_tool_schema. Before answering any question that may require real-time data or calculations, use list_tools to discover available tools, then get_tool_schema to learn their inputs.", temperature=None, toolSchemas=None):
     params = {
-        "model": haiku,
+        "model": sonnet,
         "max_tokens": 200,
         "messages": messages,
     }
@@ -30,45 +25,43 @@ def chat(messages, system_prompt=None, temperature=None, toolSchemas=None):
         params["tools"] = toolSchemas
     return client.messages.create(**params)
 
-def UseTool(ToolName, Input):
-    if ToolName == "get_current_datetime":
-        return get_current_datetime(**Input)
-    if ToolName == "add_duration":
-        return DateTimeTool.add_duration(**Input)
 
-
-def conversation(messages, continueConversation,UserMessageRequired):
+def conversation(messages, continueConversation, UserMessageRequired):
+    logThis("\n\n\n\n\n------------- New Conversation -------------")
 
     while continueConversation:
 
         if UserMessageRequired:
             add_user_message(messages, input())
-            print("System: UserMessage Added")
+            logThis("UserMessage Added")
 
-        response = chat(messages, toolSchemas=DateTimeTool.all_tools)
+        response = chat(messages, toolSchemas=ToolRegistry.discovery_tools)
+
+        logThis("\n" + str(response) + "\n")
+
+        tool_results = []
 
         for block in response.content:
             if isinstance(block, ToolUseBlock):
                 UserMessageRequired = False
-                print("System: Tool use request received for " + block.name)
-                ToolCallResult = UseTool(block.name, block.input)
-                messages.append({"role": "assistant", "content": response.content})
-                messages.append({
-                "role": "user",
-                "content": [{
+                logThis("Tool use request received for " + block.name)
+                ToolCallResult = ToolRegistry.dispatch(block.name, block.input)
+                tool_results.append({
                     "type": "tool_result",
                     "tool_use_id": block.id,
                     "content": ToolCallResult
-                    }]
                 })
-                print("System: Tool use response sent")
             elif isinstance(block, TextBlock):
-                print("\n" + block.text + "\n")
+                print(block.text)
                 UserMessageRequired = True
+
+        if tool_results:
+            messages.append({"role": "assistant", "content": response.content})
+            messages.append({"role": "user", "content": tool_results})
+            logThis("Tool use response sent")
 
 
 continueConversation = True
 UserMessageRequired = True
 messages = []
 result = conversation(messages, continueConversation, UserMessageRequired)
-
