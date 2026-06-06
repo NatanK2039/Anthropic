@@ -1,0 +1,14 @@
+[2026-06-06 17:39:05] ------------- New Conversation -------------
+[2026-06-06 17:39:15] User message added
+[2026-06-06 17:39:17] 
+Message(id='msg_015swZravvCD9ZNCdXsCXghK', container=None, content=[TextBlock(citations=None, text="Of course! I'll keep my responses to one sentence. What would you like to know?", type='text')], model='claude-sonnet-4-6', role='assistant', stop_details=None, stop_reason='end_turn', stop_sequence=None, type='message', usage=Usage(cache_creation=CacheCreation(ephemeral_1h_input_tokens=0, ephemeral_5m_input_tokens=0), cache_creation_input_tokens=0, cache_read_input_tokens=0, inference_geo='global', input_tokens=695, output_tokens=22, server_tool_use=None, service_tier='standard'))
+
+[2026-06-06 17:39:49] User message added
+[2026-06-06 17:39:50] 
+Message(id='msg_013FqFsQpo4byn1faJpYacxf', container=None, content=[TextBlock(citations=None, text='Let me check that for you!', type='text'), ToolUseBlock(id='toolu_01GyXu8RaDbgYhU2Yo8TXUf3', caller=DirectCaller(type='direct'), input={}, name='list_tools', type='tool_use')], model='claude-sonnet-4-6', role='assistant', stop_details=None, stop_reason='tool_use', stop_sequence=None, type='message', usage=Usage(cache_creation=CacheCreation(ephemeral_1h_input_tokens=0, ephemeral_5m_input_tokens=0), cache_creation_input_tokens=0, cache_read_input_tokens=0, inference_geo='global', input_tokens=704, output_tokens=44, server_tool_use=None, service_tier='standard'))
+
+[2026-06-06 17:39:50] Tool use request received for list_tools
+[2026-06-06 17:39:50] Tool use response sent
+[2026-06-06 17:39:52] 
+Message(id='msg_0147VUD4eg8fBLs9G6NKskz4', container=None, content=[TextBlock(citations=None, text='I have access to the following tools: **get_current_datetime**, **add_duration**, **read_file**, **write_file**, **list_tools**, and **get_tool_schema**.', type='text')], model='claude-sonnet-4-6', role='assistant', stop_details=None, stop_reason='end_turn', stop_sequence=None, type='message', usage=Usage(cache_creation=CacheCreation(ephemeral_1h_input_tokens=0, ephemeral_5m_input_tokens=0), cache_creation_input_tokens=0, cache_read_input_tokens=0, inference_geo='global', input_tokens=787, output_tokens=46, server_tool_use=None, service_tier='standard'))
+
